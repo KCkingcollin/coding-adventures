@@ -1,0 +1,9 @@
+[submodule "go"]
+	path = go
+	url = /home/kckingcollin/coding-projects/go/coding-adventures
+[submodule "C"]
+	path = C
+	url = /home/kckingcollin/coding-projects/C/coding-adventures
+[submodule "glsl"]
+	path = glsl
+	url = /home/kckingcollin/coding-projects/glsl/coding-adventures
