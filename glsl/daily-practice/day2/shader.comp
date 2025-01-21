@@ -1,0 +1,46 @@
+#version 430
+
+layout (local_size_x = 1) in;
+
+layout (std430, binding = 0) buffer InputBuffer {
+    uint line[];
+};
+
+uint uDigits[10] = uint[](48, 49, 50, 51, 52, 53, 54, 55, 56, 57);
+
+void main() {
+    uint answer[101];
+    for (int i = 0; i < 101; i++) {
+        answer[i] = 0;
+    }
+    uint newLine = 10;
+    int lenLine = line.length();
+    int w = 0;
+    if (lenLine > 10) {
+        answer[w] = line[0];
+        w++;
+        if (lenLine-2 > 9) {
+            int num1 = (lenLine-2)/10;
+            int num2 = (lenLine-2) % 10;
+            answer[w] = uDigits[num1];
+            w++;
+            answer[w] = uDigits[num2];
+        } else {
+            answer[w] = uDigits[lenLine-2];
+        }
+        w++;
+        answer[w] = line[lenLine-1];
+        w++;
+    } else {
+        for (int l = 0; l < lenLine; l++) {
+            answer[w] = line[l];
+            w++;
+        }
+    }
+    for (int i = 0; i < lenLine; i++) {
+        line[i] = 0;
+    }
+    for (int i = 0; i < lenLine; i++) {
+        line[i] = answer[i];
+    }
+}

@@ -1,0 +1,41 @@
+#version 430
+
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout (std430, binding = 0) buffer InputBuffer {
+    uint data[];
+};
+
+void main() {
+    uint period = 46;
+    uint checkStr[12] = {65, 69, 73, 79, 85, 89, 97, 101, 105, 111, 117, 121};
+    uint answer[200];
+    for (int i = 0; i < 200; i++) {
+        answer[i] = 0;
+    }
+    int n = 0;
+    for (int i = 0; i < data.length(); i++) {
+        if (data[i] == 0) {
+            break;
+        }
+        bool found = false;
+        for (int j = 0; j < 12; j++) {
+            if (data[i] == checkStr[j]) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            answer[n] = period;
+            n++;
+            answer[n] = data[i];
+            n++;
+        }
+    }
+    for (int i = 0; i < data.length(); i++) {
+        data[i] = 0;
+    }
+    for (int i = 0; i < data.length(); i++) {
+        data[i] = answer[i];
+    }
+}
