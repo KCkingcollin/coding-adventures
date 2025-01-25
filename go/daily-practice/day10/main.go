@@ -14,7 +14,10 @@ var y []int
 var x []int
 
 func p(i int) int {
-    if i >= maxX {return y[len(y)-1]}
+    if i > maxX {
+        y[len(y)-1] = p(maxX-1) + x[maxX]
+        return y[len(y)-1]
+    }
     if y[i] != 0 || i <= minX {} else {
         y[i] = p(i-1) + x[i]
     }
@@ -30,10 +33,9 @@ func main() {
 		fmt.Fscan(reader, &temp)
         if temp < minX {minX = temp}
         if temp > maxX {maxX = temp}
-        x = x[:temp+1]
+        x = x[:maxX+1]
         x[temp]++
     }
-    fmt.Println(maxX)
     y = make([]int, len(x)+1)
 
 	var q int

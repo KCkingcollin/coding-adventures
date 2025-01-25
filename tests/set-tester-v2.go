@@ -126,9 +126,31 @@ func main() {
 		// Compare the actual output to the expected output
 		if actualOutput != expectedOutputBlock {
 			fmt.Printf("Output for block number '%d' (starting at line number '%d') does not match the expected output.\n", blockNum, lineNum)
-			fmt.Printf("Expected: '%s'\n", expectedOutputBlock)
-			fmt.Printf("Got: '%s'\n", actualOutput)
-			fmt.Printf("Input: '%s'\n", inputBlock)
+			fmt.Printf("Expected:\n'%s'\n", expectedOutputBlock)
+			fmt.Printf("Got:\n'%s'\n", actualOutput)
+
+			// Highlight the differences line by line
+			fmt.Println("\nDifferences:")
+			actualLines := strings.Split(actualOutput, "\n")
+			expectedLines := strings.Split(expectedOutputBlock, "\n")
+			maxLines := len(actualLines)
+			if len(expectedLines) > maxLines {
+				maxLines = len(expectedLines)
+			}
+
+			for i := 0; i < maxLines; i++ {
+				actualLine := ""
+				expectedLine := ""
+				if i < len(actualLines) {
+					actualLine = actualLines[i]
+				}
+				if i < len(expectedLines) {
+					expectedLine = expectedLines[i]
+				}
+				if actualLine != expectedLine {
+					fmt.Printf("Line %d:\nExpected: '%s'\nGot:      '%s'\n", i+1, expectedLine, actualLine)
+				}
+			}
 			os.Exit(1)
 		} else {
 			fmt.Println("Passed")
