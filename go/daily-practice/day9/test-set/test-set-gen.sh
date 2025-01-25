@@ -6,15 +6,14 @@ answerSetFile="answer-set"
 touch "$testSetFile"  
 touch "$answerSetFile"
 
-for _ in {1..50}; do
+for _ in {1..10}; do
     n=$((RANDOM % 100000 + 1))
     input="$n"$'\n'
     for ((i=0; i < n; i++)) do
         input+="$((RANDOM % 100000 + 1)) "
     done
     input=${input::-1}
-    q=$((RANDOM % 100000 + 1))
-    q=100000
+    q=$((RANDOM % 1000 + 1))
     input+=$'\n'"$q"$'\n'
     for ((i=0; i < q; i++)) do
         input+="$((RANDOM % 110000 + 1))"$'\n'

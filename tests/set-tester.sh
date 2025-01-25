@@ -24,33 +24,37 @@ fi
 lineNum=1
 blockNum=1
 while read -r testLine && read -r expectedLine <&3; do
-    inputBlock=""
+    inputBlock="$testLine"
+    expectedOutputBlock="$expectedLine"
+
     while true; do
-        inputBlock+="$testLine"
-        if echo "$inputBlock" | grep -q '{"' && echo "$inputBlock" | grep -q '"}'; then
-            break
-        fi
-        inputBlock+=$'\n'
         IFS= read -r testLine || break
-    done
+        inputBlock+=$'\n'$testLine
 
-    expectedOutputBlock=""
-    while true; do
-        expectedOutputBlock+="$expectedLine"
-        if echo "$expectedOutputBlock" | grep -q '{"' && echo "$expectedOutputBlock" | grep -q '"}'; then
+        if [[ "$inputBlock" == *'{"'* && "$inputBlock" == *'"}'* ]]; then
             break
         fi
-        expectedOutputBlock+=$'\n'
-        IFS= read -r expectedLine <&3 || break
     done
 
-    inputBlock="${inputBlock:3:-3}"
-    expectedOutputBlock="${expectedOutputBlock:3:-3}"
+    while true; do
+        IFS= read -r expectedLine <&3 || break
+        expectedOutputBlock+=$'\n'$expectedLine
 
-    numLines=$(echo -e "$inputBlock" | wc -l)
+        if [[ "$expectedOutputBlock" == *'{"'* && "$expectedOutputBlock" == *'"}'* ]]; then
+            break
+        fi
+    done
+
+    inputBlock="${inputBlock#*$'\n'}"
+    inputBlock="${inputBlock%$'\n'*}"
+
+    expectedOutputBlock="${expectedOutputBlock#*$'\n'}"
+    expectedOutputBlock="${expectedOutputBlock%$'\n'*}"
+
+    numLines=$(wc -l <<< "$inputBlock" | xargs)
 
     echo "Running test number $blockNum"
-    actual_output=$(echo -e "$inputBlock" | $command)
+    actual_output=$($command <<< "$inputBlock")
     wait
 
     if [ "$actual_output" != "$expectedOutputBlock" ]; then
@@ -59,6 +63,8 @@ while read -r testLine && read -r expectedLine <&3; do
         echo "Got: '$actual_output'"
         echo "Input: '$inputBlock'"
         exit 1
+    else
+        echo "Passed"
     fi
 
     lineNum=$((lineNum + numLines))
