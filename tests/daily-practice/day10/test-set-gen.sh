@@ -7,14 +7,13 @@ touch "$testSetFile"
 touch "$answerSetFile"
 
 for _ in {1..50}; do
-    num=$((RANDOM % 100000 + 1))
-    n=$((num / (RANDOM % 10 + 1)))
-    q=$((num - n))
+    n=$((RANDOM % 100000 + 1))
     input="$n"$'\n'
     for ((i=0; i < n; i++)) do
         input+="$((RANDOM % 100000 + 1)) "
     done
     input=${input::-1}
+    q=$((RANDOM % 100000 + 1))
     input+=$'\n'"$q"$'\n'
     for ((i=0; i < q; i++)) do
         input+="$((RANDOM % 110000 + 1))"$'\n'

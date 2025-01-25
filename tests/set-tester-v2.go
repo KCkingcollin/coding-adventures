@@ -3,10 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
-	"strings"
-	"os/exec"
 	"log"
+	"os"
+	"os/exec"
+	"strings"
 )
 
 func main() {
@@ -15,18 +15,25 @@ func main() {
 		os.Exit(1)
 	}
 
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Error getting current directory: %v\n", err)
+	}
+	fmt.Printf("Working DIR: %s\n", dir)
+
 	testSet := os.Args[1]
 	answerSet := os.Args[2]
 	command := os.Args[3]
 
-	// Check if files exist
-	if _, err := os.Stat(testSet); os.IsNotExist(err) {
-		fmt.Printf("Error: Test set file '%s' does not exist.\n", testSet)
-		os.Exit(1)
-	}
+	// Replace "." with the current working directory
+	command = strings.Replace(command, "./", dir+"/", 1)
 
-	if _, err := os.Stat(answerSet); os.IsNotExist(err) {
-		fmt.Printf("Error: Answer set file '%s' does not exist.\n", answerSet)
+	// Split the command into command and arguments
+	args := strings.Split(command, " ")
+
+	// Check if the command exists in the PATH
+	if _, err := exec.LookPath(args[0]); err != nil {
+		fmt.Printf("Error: Command '%s' does not exist.\n", args[0])
 		os.Exit(1)
 	}
 
@@ -106,11 +113,13 @@ func main() {
 
 		// Run the command and capture the output
 		fmt.Printf("Running test number %d\n", blockNum)
-		cmd := exec.Command(command)
+		cmd := exec.Command(args[0], args[1:]...) // Pass command and its arguments
 		cmd.Stdin = strings.NewReader(inputBlock)
-		actualOutputBytes, err := cmd.Output()
+		actualOutputBytes, err := cmd.CombinedOutput() // Capture both stdout and stderr
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("Error running command: %v\n", err)
+			fmt.Printf("Stderr: %s\n", string(actualOutputBytes))
+			os.Exit(1)
 		}
 		actualOutput := string(actualOutputBytes)
 

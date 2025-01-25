@@ -14,7 +14,7 @@ var y []int
 var x []int
 
 func p(i int) int {
-    fmt.Println(y)
+    if i >= maxX {return y[len(y)-1]}
     if y[i] != 0 || i <= minX {} else {
         y[i] = p(i-1) + x[i]
     }
@@ -33,7 +33,7 @@ func main() {
         x = x[:temp+1]
         x[temp]++
     }
-    fmt.Println(x)
+    fmt.Println(maxX)
     y = make([]int, len(x)+1)
 
 	var q int
