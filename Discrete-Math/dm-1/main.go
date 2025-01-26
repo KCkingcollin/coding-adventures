@@ -66,7 +66,7 @@ func main() {
     fmt.Println()
 	p = true
     q = true
-    fmt.Println("Truth table for px^q (p!=q)")
+    fmt.Println("Truth table for pxvq (p!=q)")
     fmt.Println("p    |  q  |")
 	for i, j := 1, 1; i <= int(math.Pow(2, float64(unsafe.Sizeof(q)) + float64(unsafe.Sizeof(p)))); i, j = i+1, j+1 {
         fmt.Println("-------------------------")
