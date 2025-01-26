@@ -9,31 +9,34 @@ import (
 
 func main() {
     var n int
-	var input int
-	var data []int32
+	var input int32
     var sourceFile string = "shader.comp"
     shaderSource := ghf.LoadFile(sourceFile)
 	shaderManager := glf.InitShaderManager(shaderSource, "shader.comp")
 	defer shaderManager.Cleanup()
 
     fmt.Scan(&n)
+    data := make([]int32, n+1)
+    data[0] = int32(n)
     for i := 0; i < n; i++ {
         fmt.Scan(&input)
-        data = append(data, int32(input))
+        data[i+1] = input
+	}
+    var q int
+    fmt.Scan(&q)
+    data = append(data, int32(q))
+    for i := 0; i < q; i++ {
+        fmt.Scan(&input)
+        data = append(data, input)
 	}
 
     output := shaderManager.Execute(data)
-    // // for strings
-    // for _, result := range output {
-    //     if result == '\x00' {
-    //         break
-    //     }
-    //     fmt.Printf("%c", rune(result))
-    // }
 
-    // for numbers
     for _, result := range output {
-        fmt.Printf("%d", result)
+        if result == 0 {
+            break
+        }
+        fmt.Printf("%d\n", result)
     }
     fmt.Println()
 }

@@ -18,7 +18,7 @@ func p(i int) int {
         y[len(y)-1] = p(maxX-1) + x[maxX]
         return y[len(y)-1]
     }
-    if y[i] != 0 || i <= minX {} else {
+    if y[i] == 0 && i > minX {
         y[i] = p(i-1) + x[i]
     }
     return y[i]
