@@ -137,4 +137,24 @@ func main() {
             j = 0
         }
     }
+
+    fmt.Println()
+	p = true
+    q = true
+    var r bool = true
+    fmt.Println("Truth table for pvq->~r (!(p || q) || !r)")
+    fmt.Println("q    |  p    |    r   |    pvq   |   ~r   |    pvq->~r")
+	for i, j, l := 1, 1, 1; i <= int(math.Pow(2, float64(unsafe.Sizeof(q)) + float64(unsafe.Sizeof(p)) + float64(unsafe.Sizeof(r)))); i, j, l = i+1, j+1, l+1 {
+        fmt.Println("--------------------------------------------------------")
+        fmt.Printf("%t | %t | %t | %t | %t | %t\n", q, p, r, p || q, !r, !(p || q) || !r)
+        p = !p
+        if j == int(math.Pow(2, float64(unsafe.Sizeof(q)) + float64(unsafe.Sizeof(p)))) {
+            q = !q
+            j = 0
+        }
+        if l == int(math.Pow(2, float64(unsafe.Sizeof(q)))) {
+            r = !r
+            l = 0
+        }
+    }
 }
